@@ -7,7 +7,7 @@ module Func
         σ = -ones(Float64, Const.n)
         z = (w * h .- 10.0^(-7)) .* α
         prob = exp.(z) ./ 2.0 ./ cosh.(z)
-        pup = rand(Const.n)
+        pup = rand(UnitRange{Int32}(1:Const.n))
         for ix in 1:Const.n
             if pup[ix] < prob[ix]
                 σ[ix] = 1.0
@@ -21,7 +21,7 @@ module Func
         h = -ones(Float64, Const.n)
         z = transpose(w) * σ .* α
         prob = exp.(z) ./ 2.0 ./ cosh.(z)
-        pup = rand(Const.n)
+        pup = rand(UnitRange{Int32}(1:Const.n))
         for ix in 1:Const.n
             if pup[ix] < prob[ix]
                 h[ix] = 1.0

@@ -10,20 +10,21 @@ module Init
 
     function α(β)
 
-        return acosh(exp(2.0 * β)) ./ 2.0
+        return acosh(exp(2.0 * β)) / 2.0
     end
 
     function w()
 
         weight = Array(Diagonal(fill(1.0, (Const.n, Const.n))))
-        for ix in 1:Const.n
-            index = findfirst(isequal(ix), Const.x)
-            i = index[1]
-            j = index[2]
-            iu = mod(i + 1 - 1, Const.l) + 1
-            ju = mod(j + 1 - 1, Const.l) + 1
-            weight[Const.x[iu, j], ix] = 1.0
-            weight[Const.x[i, ju], ix] = 1.0
+        for i in 1:Const.l - 1
+            for j in 1:Const.l
+                weight[Const.x[i + 1, j], Const.x[i, j]] = 1.0
+            end
+        end
+        for j in 1:Const.l - 1
+            for i in 1:Const.l
+                weight[Const.x[i, j + 1], Const.x[i, j]] = 1.0
+            end
         end
         return weight
     end

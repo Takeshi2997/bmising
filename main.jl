@@ -3,7 +3,8 @@ include("./initialize.jl")
 include("./function.jl")
 using .Const, .Init, .Func, LinearAlgebra
 
-w = Init.w()
+wwid = Init.wwid()
+wlen = Init.wlen()
 
 f = open("magnetization.txt", "w")
 g = open("logmagnetization.txt", "w")
@@ -15,8 +16,12 @@ for it in 1:500
     σ = Init.σ()
     α = Init.α(β)
     for i in 1:Const.iters_num
-        h = Func.updateh(σ, w, α)
-        σ = Func.updateσ(h, w, α)
+        zσwid = transpose(wwid) * σ .* α
+        zσlen = transpose(wlen) * σ .* α
+        hwid = Func.updateh(zσwid)
+        hlen = Func.updateh(zσlen)
+        zh = (wwid * hwid + wlen * hlen) .* α
+        σ = Func.updateσ(zh)
         if i > Const.burnintime
             if i % Const.sample_interval == 0
                 n += 1.0

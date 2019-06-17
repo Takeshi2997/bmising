@@ -2,11 +2,10 @@ module Func
     include("./setup.jl")
     using .Const, LinearAlgebra
 
-    function updateσ(h, w, α)
+    function updateσ(zh)
 
         σ = -ones(Float32, Const.n)
-        z = (w * h .- 10.0^(-7)) .* α
-        prob = exp.(z) ./ 2.0 ./ cosh.(z)
+        prob = 1 ./ (1 .+ exp.(-2.0 * zh))
         pup = rand(Float32, Const.n)
         for ix in 1:Const.n
             if pup[ix] < prob[ix]
@@ -16,11 +15,10 @@ module Func
         return σ
     end
 
-    function updateh(σ, w, α)
+    function updateh(zσ)
 
         h = -ones(Float32, Const.n)
-        z = transpose(w) * σ .* α
-        prob = exp.(z) ./ 2.0 ./ cosh.(z)
+        prob = 1 ./ (1 .+ exp.(-2.0 * zσ))
         pup = rand(Float32, Const.n)
         for ix in 1:Const.n
             if pup[ix] < prob[ix]

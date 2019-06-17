@@ -13,18 +13,28 @@ module Init
         return acosh(exp(2.0 * β)) / 2.0
     end
 
-    function w()
+    function wwid()
 
         weight = Array(Diagonal(fill(1.0, (Const.n, Const.n))))
-        for i in 1:Const.l - 1
-            for j in 1:Const.l
-                weight[Const.x[i + 1, j], Const.x[i, j]] = 1.0
-            end
+        for ix in 1:Const.n
+            index = findfirst(isequal(ix), Const.x)
+            i = index[1]
+            j = index[2]
+            iu = mod(i + 1 - 1, Const.l) + 1
+            weight[Const.x[iu, j], ix] = 1.0
         end
-        for j in 1:Const.l - 1
-            for i in 1:Const.l
-                weight[Const.x[i, j + 1], Const.x[i, j]] = 1.0
-            end
+        return weight
+    end
+
+    function wlen()
+
+        weight = Array(Diagonal(fill(1.0, (Const.n, Const.n))))
+        for ix in 1:Const.n
+            index = findfirst(isequal(ix), Const.x)
+            i = index[1]
+            j = index[2]
+            ju = mod(j + 1 - 1, Const.l) + 1
+            weight[Const.x[i, ju], ix] = 1.0
         end
         return weight
     end
